@@ -4,18 +4,48 @@ require 'jira'
 module Lita
   module Handlers
     class Jira < Handler
+      ISSUE_ID_MATCH = '([a-zA-Z]{2,4}-\d*)'
+
       route(
-        /^jira\s(\D*-\d*)$/,
+        /^jira\s#{ISSUE_ID_MATCH}$/,
         :issue_summary,
         command: true,
-        help: { 'jira <issue ID>' => 'Shows summary for <issue ID>' }
+        help: { 'jira <issue ID>' => 'Shows basic details on <issue ID>' }
       )
 
       route(
-        /^jira\s(\D*-\d*)\sdetails$/,
+        /^jira\sdetails\s#{ISSUE_ID_MATCH}$/,
         :issue_details,
         command: true,
-        help: { 'jira <issue ID> details' => 'Shows detailed information for <issue ID>' }
+        help: { 'jira details <issue ID>' => 'Shows all details on <issue ID>' }
+      )
+
+      route(
+        /^jira\s(\D*)\s"(.+)"$/,
+        :issue_create,
+        command: true,
+        help: { 'jira <project key> "<summary>"' => 'Creates a new issue with <summary> in <project key>'}
+      )
+
+      route(
+        /^jira\snew\sissue\s(\D*)\s"(.+)"$/,
+        :issue_create,
+        command: true,
+        help: { 'jira new issue <project key> "<summary>"' => 'Creates a new issue with <summary> in <project key>' }
+      )
+
+      route(
+        /^jira\s#{ISSUE_ID_MATCH}\s"(.+)"$/,
+        :comment_create,
+        command: true,
+        help: { '' => '' }
+      )
+
+      route(
+        /^jira\snew\scomment\s#{ISSUE_ID_MATCH}\s"(.+)"$/,
+        :comment_create,
+        command: true,
+        help: { '' => '' }
       )
 
       def self.default_config(config)
@@ -48,6 +78,20 @@ module Lita
         end
       end
 
+      def issue_create(response)
+        project_id = response.matches[0][0]
+        summary = response.matches[0][1]
+        issue_id = create_issue(project_id, summary)
+        if issue_id
+          response.reply("Created issue #{issue_id}")
+        else
+          response.reply('Error creating JIRA issue')
+        end
+      end
+
+      def comment_create(response)
+      end
+
       private
 
       def j_client
@@ -76,6 +120,18 @@ module Lita
             nil
           end
         end
+      end
+
+      def create_issue(project_id, summary)
+        nil
+#        client = j_client
+#        if client
+#          begin
+#            client.Issue.new(project_id, summary)
+#          rescue JIRA::HTTPError
+#            nil
+#          end
+#        end
       end
     end
 

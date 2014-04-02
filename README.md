@@ -23,9 +23,21 @@ config.handlers.jira.context  = '' # If your instance is in a /subdirectory, put
 
 ## Usage
 
+Short and simple commands:
 ```
-Lita jira <issue ID>         # Shows summary for <issue ID>
-Lita jira <issue ID> details # Shows detailed information for <issue ID>
+Lita jira <project key> "<summary>"               # Creates a new issue with <summary> in <project key>
+Lita jira <issue ID> "<comment>"                  # Adds <comment> to <issue ID>
+Lita jira <issue ID>                              # Shows basic details on <issue ID>
+```
+
+Long-form:
+```
+Lita jira issue new <project key> "<summary>"     # Creates a new issue with <summary> in <project key>
+Lita jira issue details <issue ID>                #
+Lita jira issue assignee
+Lita jira issue assignee @username
+Lita jira issue
+Lita jira comment new <issue ID> "<comment>"      # Adds <comment> to <issue ID>
 ```
 
 ## License

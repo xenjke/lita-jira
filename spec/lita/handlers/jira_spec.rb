@@ -1,8 +1,12 @@
 require 'spec_helper'
 
 describe Lita::Handlers::Jira, lita_handler: true do
+  it { routes_command('jira ABC "short summary"').to(:issue_create) }
+  it { routes_command('jira ABC-123 "additional comment"').to(:comment_create) }
   it { routes_command('jira ABC-123').to(:issue_summary) }
-  it { routes_command('jira ABC-123 details').to(:issue_details) }
+  it { routes_command('jira new issue ABC "Short summary"').to(:issue_create) }
+  it { routes_command('jira new comment ABC-123 "additional comment"').to(:comment_create) }
+  it { routes_command('jira details ABC-123').to(:issue_details) }
 
   describe '.default_config' do
     it 'sets username to nil' do
@@ -57,6 +61,22 @@ describe Lita::Handlers::Jira, lita_handler: true do
         receive(:fetch_issue).with('XYZ-987').and_return(nil)
       send_command('jira XYZ-987 details')
       expect(replies.last).to eq('Error fetching JIRA issue')
+    end
+  end
+
+  describe '#issue_create' do
+    it 'with valid project ID and summary creates an issue' do
+      allow_any_instance_of(Lita::Handlers::Jira).to \
+        receive(:create_issue).with('XYZ', 'Short summary').and_return('XYZ-001')
+      send_command('jira new issue XYZ "Short summary"')
+      expect(replies.last).to eq('Created issue XYZ-001')
+    end
+
+    it 'without a valid project ID shows an error' do
+      allow_any_instance_of(Lita::Handlers::Jira).to \
+       receive(:create_issue).with('INVALID', 'Short summary').and_return(nil)
+      send_command('jira new INVALID "Short summary"')
+      expect(replies.last).to eq('Error creating JIRA issue')
     end
   end
 end
