@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe JiraHelper::Regex, lita_handler: true do
+describe JiraHelper::Regex do
 	
 	PROJECT_PATTERN = JiraHelper::Regex::PROJECT_PATTERN
 	SUBJECT_PATTERN = JiraHelper::Regex::SUBJECT_PATTERN
