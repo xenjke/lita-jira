@@ -4,3 +4,7 @@ FileName:
 
 LineLength:
   Max: 190
+
+Metrics/BlockLength:
+  Exclude:
+    - "**/*_spec.rb"
