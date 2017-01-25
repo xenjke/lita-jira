@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'lita', '>= 4.0'
   spec.add_runtime_dependency 'jira-ruby'
+  spec.add_runtime_dependency 'activesupport', '~> 4.2', '>= 4.2.7.1'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'coveralls'
