@@ -207,7 +207,7 @@ describe Lita::Handlers::Jira, lita_handler: true do
       expect(replies.last).to eq('Issue XYZ-987 created')
     end
 
-    it 'creates a new issue if the project is valid and there is a summary' do
+    it 'creates a new issue if the project is valid and there is a summary and subject' do
       grab_request(valid_client)
       send_command('todo XYZ "Some subject text" "Summary text"')
       expect(replies.last).to eq('Issue XYZ-987 created')
