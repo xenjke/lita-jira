@@ -8,8 +8,8 @@ describe Lita::Handlers::JiraUtility, lita_handler: true do
 
   it 'double qoutes around subject and summary' do
     match = %(todo PRJ "Any subject" "Any summary").match(regex)
-    expect(match['project']).to eq(project)
-    expect(match['summary']).to eq(summary)
-    expect(match['subject']).to eq(subject)
+    expect(match['project']).to eq('PRJ')
+    expect(match['summary']).to eq('Any subject')
+    expect(match['subject']).to eq('Any summary')
   end
 end
